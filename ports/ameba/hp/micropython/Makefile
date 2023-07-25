@@ -14,6 +14,8 @@ MICROPY_ROM_TEXT_COMPRESSION ?= 1
 include $(TOP)/py/py.mk
 include $(TOP)/extmod/extmod.mk
 
+GIT_SUBMODULES += lib/ambd_sdk
+
 CROSS_COMPILE ?= arm-none-eabi-
 
 INC += $(IFLAGS)
