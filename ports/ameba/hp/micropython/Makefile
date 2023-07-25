@@ -22,17 +22,6 @@ INC += -I$(BUILD)
 
 CFLAGS += $(INC) $(GLOBAL_CFLAGS) $(COPT)
 
-# CSUPEROPT = -Os # save some code space
-
-# # Tune for Debugging or Optimization
-# CFLAGS += -g  # always include debug info in the ELF
-# ifeq ($(DEBUG), 1)
-# CFLAGS += -O0
-# else
-# CFLAGS += -Os -DNDEBUG
-# CFLAGS += -fdata-sections -ffunction-sections
-# endif
-
 # Flags for optional C++ source code
 CXXFLAGS += $(CPPFLAGS)
 
@@ -43,6 +32,7 @@ SRC_C = \
 	mphalport.c \
 	shared/libc/printf.c \
 	shared/readline/readline.c \
+	shared/runtime/gchelper_generic.c \
 	shared/runtime/pyexec.c \
 	shared/runtime/stdout_helpers.c \
 	$(BUILD)/_frozen_mpy.c \

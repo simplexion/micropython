@@ -134,6 +134,8 @@ static void app_dslp_wake(void)
 	SOCPS_AONWakeClear(BIT_ALL_WAKE_STS);
 }
 
+extern void micropython_task_init(void);
+
 //default main
 int main(void)
 {
@@ -154,6 +156,7 @@ int main(void)
 	// shell_init_rom(0, 0);	
 	// shell_init_ram();
 	// ipc_table_init();
+	micropython_task_init();
 
 	/* Register Log Uart Callback function */
 	// InterruptRegister((IRQ_FUN) shell_uart_irq_rom, UART_LOG_IRQ, (u32)NULL, 5);

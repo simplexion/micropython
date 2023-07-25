@@ -6,10 +6,15 @@
 #include "shared/runtime/gchelper.h"
 #include "shared/runtime/pyexec.h"
 
+#include "ameba_soc.h"
+#include "osdep_service.h"
+#include <stdarg.h>
+#include "strproc.h"
+
 // Allocate memory for the MicroPython GC heap.
 static char heap[4096];
 
-int mp_main(int argc, char **argv) {
+int micropython_task(void* arg) {
     // Initialise the MicroPython runtime.
     mp_stack_ctrl_init();
     gc_init(heap, heap + sizeof(heap));
@@ -22,6 +27,14 @@ int mp_main(int argc, char **argv) {
     gc_sweep_all();
     mp_deinit();
     return 0;
+}
+
+void micropython_task_init(void) {
+	if (pdTRUE != xTaskCreate( micropython_task, "MicroPython", 1024, 
+		NULL, tskIDLE_PRIORITY + 5 , NULL))
+	{
+		DiagPrintf("Create Log UART Task Err!!\n");
+	}
 }
 
 // Handle uncaught exceptions (should never be reached in a correct C implementation).
