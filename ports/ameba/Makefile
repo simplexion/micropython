@@ -17,5 +17,5 @@ all:
 
 clean:
 	rm -rf $(IMAGE_DIR)
-	make -C lp clean
-	make -C hp clean
+	make -C lp AMBD_SDK=$(AMBD_SDK) clean
+	make -C hp AMBD_SDK=$(AMBD_SDK) clean
