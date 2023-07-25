@@ -47,7 +47,6 @@ CORE_TARGETS: $(OBJS)
 #                        RULES TO CLEAN TARGETS                               #
 #*****************************************************************************#
 clean: CLEAN_OBJS
-	make -C micropython clean
 	$(REMOVE) *.o
 	$(REMOVE) *.i
 	$(REMOVE) *.s

@@ -22,7 +22,9 @@ INC += $(IFLAGS)
 INC += -I$(TOP)
 INC += -I$(BUILD)
 
-CFLAGS += $(INC) $(GLOBAL_CFLAGS) $(COPT)
+# -MP causes the MicroPython build to crash upon second build
+CFLAGS += $(filter-out -MP,$(GLOBAL_CFLAGS))
+CFLAGS += $(INC) $(COPT)
 
 # Flags for optional C++ source code
 CXXFLAGS += $(CPPFLAGS)
@@ -53,9 +55,8 @@ $(BUILD)/_frozen_mpy.c: $(TOP)/tests/frozen/frozentest.mpy $(BUILD)/genhdr/qstrd
 	$(ECHO) "MISC freezing bytecode"
 	$(Q)$(TOP)/tools/mpy-tool.py -f -q $(BUILD)/genhdr/qstrdefs.preprocessed.h -mlongint-impl=none $< > $@
 
+# simply link all MicroPython objcts to one relocatable object 
 $(BUILD)/micropython.o: $(OBJ)
-	$(ECHO) "LINK $@"
-	$(Q)$(LD) -r -o $@ $^ $(LIBS)
-	$(Q)$(SIZE) $@
+	$(Q)$(LD) -relocatable -o $@ $^ $(LIBS)
 
 include $(TOP)/py/mkrules.mk

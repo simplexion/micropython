@@ -40,3 +40,4 @@ clean:
 	@rm -f $(IMAGE_DIR).tar.gz
 	@make -C lp AMBD_SDK=$(AMBD_SDK) clean
 	@make -C hp AMBD_SDK=$(AMBD_SDK) clean
+	@make -C hp/micropython AMBD_SDK=$(AMBD_SDK) clean
