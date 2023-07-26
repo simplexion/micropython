@@ -21,6 +21,10 @@ CROSS_COMPILE ?= arm-none-eabi-
 INC += $(IFLAGS)
 INC += -I$(TOP)
 INC += -I$(BUILD)
+INC += -Imp_helper
+INC += -Imp_helper/mods
+INC += -Imp_helper/mods/network
+INC += -Imp_helper/mods/machine
 
 BAD_FLAGS = \
 	-MP \
@@ -40,17 +44,23 @@ LIBS =
 SRC_C = \
 	micropython_task.c \
 	mphalport.c \
+	$(BUILD)/_frozen_mpy.c \
 	shared/libc/printf.c \
+	shared/libc/string0.c \
 	shared/readline/readline.c \
 	shared/runtime/interrupt_char.c \
 	shared/runtime/gchelper_generic.c \
 	shared/runtime/pyexec.c \
 	shared/runtime/stdout_helpers.c \
-	$(BUILD)/_frozen_mpy.c \
 
-SRC_C += shared/libc/string0.c
+SRC_UPY_C = \
+	mp_helper/mods/modmachine.c \
+	mp_helper/gccollect.c \
+
+SRC_C += $(SRC_UPY_C)
 
 SRC_QSTR += shared/readline/readline.c shared/runtime/pyexec.c
+SRC_QSTR += $(SRC_UPY_C)
 
 OBJ += $(PY_O)
 OBJ += $(addprefix $(BUILD)/, $(SRC_C:.c=.o))

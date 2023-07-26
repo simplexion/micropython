@@ -23,6 +23,7 @@
 #define MICROPY_PY_IO                           (0)
 #define MICROPY_PY_STRUCT                       (0)
 #define MICROPY_PY_TIME                         (1)
+#define MICROPY_PY_MACHINE                      (1)
 
 // Type definitions for the specific machine.
 

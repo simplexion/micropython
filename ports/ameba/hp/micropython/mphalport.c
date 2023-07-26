@@ -4,7 +4,7 @@
  * The MIT License (MIT)
  *
  * Copyright (c) 2016 Chester Tseng
- * Copyright (c) 2023 Simplexion GmbH
+ * Copyright (c) 2023 Markus Blechschmidt (Simplexion GmbH)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
