@@ -36,7 +36,6 @@
 #include "py/gc.h"
 #include "py/mperrno.h"
 #include "py/stackctrl.h"
-#include "shared/runtime/gchelper.h"
 #include "shared/runtime/pyexec.h"
 #include "mphalport.h"
 

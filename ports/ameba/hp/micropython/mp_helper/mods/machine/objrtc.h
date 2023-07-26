@@ -3,10 +3,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2013, 2014 Damien P. George
- * Copyright (c) 2015 Daniel Campora
- * Copyright (c) 2016 Chester Tseng 
- * Copyright (c) 2023 Markus Blechschmidt (Simplexion GmbH)
+ * Copyright (c) 2016 Chester Tseng
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,20 +24,20 @@
  * THE SOFTWARE.
  */
 
-#include <stdio.h>
 
-#include "py/mpconfig.h"
-#include "py/gc.h"
-#include "shared/runtime/gchelper.h"
-#include "gccollect.h"
+#include "py/nlr.h"
+#include "py/obj.h"
+#include "py/runtime.h"
+#include "shared/timeutils/timeutils.h"
+#include "rtc_api.h"
 
-#if MICROPY_ENABLE_GC
+extern const mp_obj_type_t rtc_type;
 
-// Do a garbage collection cycle.
-void gc_collect(void) {
-    gc_collect_start();
-    gc_helper_collect_regs_and_stack();
-    gc_collect_end();
-}
+#define SECS_IN_30YEARS (365*30+7)*24*60*60
+#define NUM_SECS_IN_DAY 86400
 
-#endif
+typedef struct {
+    mp_obj_base_t base;
+} rtc_obj_t;
+
+void rtc_init0(void);

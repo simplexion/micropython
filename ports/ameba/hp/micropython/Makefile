@@ -2,6 +2,18 @@ include $(MAKE_INCLUDE_GEN)
 
 include ../../../../py/mkenv.mk
 
+# select the board to build for, the default board is AMEBA_AMB23
+BOARD ?= AMEBA_AMB23
+BOARD_DIR ?= boards/$(BOARD)
+
+ifeq ($(wildcard $(BOARD_DIR)/.),)
+$(error Invalid BOARD specified: $(BOARD_DIR))
+endif
+
+include $(BOARD_DIR)/mpconfigboard.mk
+
+CHIP := AMEBAD
+
 CROSS = 1
 
 # qstr definitions (must come before including py.mk)
@@ -21,6 +33,7 @@ CROSS_COMPILE ?= arm-none-eabi-
 INC += $(IFLAGS)
 INC += -I$(TOP)
 INC += -I$(BUILD)
+INC += -I$(BOARD_DIR)
 INC += -Imp_helper
 INC += -Imp_helper/mods
 INC += -Imp_helper/mods/network
@@ -35,6 +48,10 @@ BAD_FLAGS = \
 
 CFLAGS += $(filter-out $(BAD_FLAGS),$(GLOBAL_CFLAGS))
 CFLAGS += $(INC) $(COPT)
+CFLAGS += -D$(CHIP)
+CFLAGS += -D$(BOARD)
+CFLAGS += -DMICROPYTHON_RTL8721D
+CFLAGS += -DCONFIG_PLATFORM_8721D
 
 # Flags for optional C++ source code
 CXXFLAGS += $(CPPFLAGS)
@@ -54,8 +71,11 @@ SRC_C = \
 	shared/runtime/stdout_helpers.c \
 
 SRC_UPY_C = \
-	mp_helper/mods/modmachine.c \
 	mp_helper/gccollect.c \
+	mp_helper/mods/modmachine.c \
+	mp_helper/mods/machine/objpin.c \
+	mp_helper/mods/machine/objrtc.c \
+	$(BOARD_DIR)/pins.c \
 
 SRC_C += $(SRC_UPY_C)
 
