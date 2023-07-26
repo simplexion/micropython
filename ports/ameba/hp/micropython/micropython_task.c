@@ -1,3 +1,5 @@
+#include "micropython_task.h"
+
 #include "py/builtin.h"
 #include "py/compile.h"
 #include "py/gc.h"
@@ -11,9 +13,14 @@
 #include "osdep_service.h"
 #include <stdarg.h>
 #include "strproc.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "cmsis_os.h"
+
+TaskHandle_t mp_main_task_handle;
 
 // Allocate memory for the MicroPython GC heap.
-static char heap[4096];
+static char heap[MP_HEAP_SIZE];
 
 void micropython_task(void* arg) {
 
@@ -30,15 +37,21 @@ void micropython_task(void* arg) {
     // Deinitialise the runtime.
     gc_sweep_all();
     mp_deinit();
-    return 0;
 }
 
 void micropython_task_init(void) {
-	if (pdTRUE != xTaskCreate( micropython_task, "MicroPython", 1024, 
-		NULL, tskIDLE_PRIORITY + 5 , NULL))
-	{
-		DiagPrintf("Create Log UART Task Err!!\n");
-	}
+    if(
+        xTaskCreate(
+            micropython_task,
+            MICROPY_TASK_NAME,
+            MICROPY_TASK_STACK_DEPTH,
+            NULL,
+            MICROPY_TASK_PRIORITY,
+            &mp_main_task_handle)
+        != pdPASS
+    ) {
+        printf("\n\r%s xTaskCreate(init_thread) failed", __FUNCTION__);
+    }
 }
 
 // Handle uncaught exceptions (should never be reached in a correct C implementation).

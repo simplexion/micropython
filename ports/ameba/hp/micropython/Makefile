@@ -52,7 +52,7 @@ SRC_C += shared/libc/string0.c
 
 SRC_QSTR += shared/readline/readline.c shared/runtime/pyexec.c
 
-OBJ += $(PY_CORE_O)
+OBJ += $(PY_O)
 OBJ += $(addprefix $(BUILD)/, $(SRC_C:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(SRC_CXX:.cpp=.o))
 

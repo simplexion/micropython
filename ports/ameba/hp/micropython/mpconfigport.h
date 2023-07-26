@@ -34,6 +34,13 @@ typedef long mp_off_t;
         mp_handle_pending(true); \
     } while(0); \
 
+// Heap size for Garbage Collector
+#define MP_HEAP_SIZE                        (64 * 1024)
+
+#define MICROPY_TASK_NAME                   ((const char*)"micropython_main_task")
+#define MICROPY_TASK_STACK_DEPTH            (((20 * 1024) + 512) / sizeof(StackType_t))
+#define MICROPY_TASK_PRIORITY               (tskIDLE_PRIORITY + 1) // 3 for Realtime, the highest priority
+
 // We need to provide a declaration/definition of alloca().
 #include <alloca.h>
 
