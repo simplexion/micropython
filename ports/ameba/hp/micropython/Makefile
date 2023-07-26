@@ -22,8 +22,14 @@ INC += $(IFLAGS)
 INC += -I$(TOP)
 INC += -I$(BUILD)
 
-# -MP causes the MicroPython build to crash upon second build
-CFLAGS += $(filter-out -MP,$(GLOBAL_CFLAGS))
+BAD_FLAGS = \
+	-MP \
+	-MMD \
+	--save-temps \
+	-Wundef \
+	-Wextra
+
+CFLAGS += $(filter-out $(BAD_FLAGS),$(GLOBAL_CFLAGS))
 CFLAGS += $(INC) $(COPT)
 
 # Flags for optional C++ source code
@@ -32,7 +38,7 @@ CXXFLAGS += $(CPPFLAGS)
 LIBS =
 
 SRC_C = \
-	main.c \
+	micropython_task.c \
 	mphalport.c \
 	shared/libc/printf.c \
 	shared/readline/readline.c \
