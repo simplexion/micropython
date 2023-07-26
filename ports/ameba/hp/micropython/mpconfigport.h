@@ -20,11 +20,19 @@
 #define MICROPY_PY_IO                           (0)
 #define MICROPY_PY_STRUCT                       (0)
 
+#define MICROPY_KBD_EXCEPTION                   (1)
+#define MICROPY_NLR_SETJMP                      (1)
+
 // Type definitions for the specific machine.
 
 typedef intptr_t mp_int_t; // must be pointer size
 typedef uintptr_t mp_uint_t; // must be pointer size
 typedef long mp_off_t;
+
+#define MICROPY_EVENT_POLL_HOOK \
+    do { \
+        mp_handle_pending(true); \
+    } while(0); \
 
 // We need to provide a declaration/definition of alloca().
 #include <alloca.h>

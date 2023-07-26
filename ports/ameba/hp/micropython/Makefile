@@ -42,6 +42,7 @@ SRC_C = \
 	mphalport.c \
 	shared/libc/printf.c \
 	shared/readline/readline.c \
+	shared/runtime/interrupt_char.c \
 	shared/runtime/gchelper_generic.c \
 	shared/runtime/pyexec.c \
 	shared/runtime/stdout_helpers.c \
