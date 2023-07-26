@@ -39,7 +39,7 @@ submodules:
 	make -C hp/micropython submodules
 
 .PHONY: flash
-flash: $(IMAGE_PARTS)
+flash:
 	cd $(IMAGE_DIR) && amebad_image_tool /dev/ttyUSB0
 
 .PHONY: term
