@@ -2,6 +2,8 @@
 #include "ameba_soc.h"
 #include "main.h"
 
+#include "../micropython/micropython_task.h"
+
 #if defined(CONFIG_FTL_ENABLED)
 #include "ftl_int.h"
 extern const u8 ftl_phy_page_num;
@@ -134,9 +136,6 @@ static void app_dslp_wake(void)
 	SOCPS_AONWakeClear(BIT_ALL_WAKE_STS);
 }
 
-extern void micropython_task_init(void);
-
-//default main
 int main(void)
 {
 	if (wifi_config.wifi_ultra_low_power &&
@@ -149,18 +148,9 @@ int main(void)
 #ifdef CONFIG_MBED_TLS_ENABLED
 	app_mbedtls_rom_init();
 #endif
-	//app_init_debug();
+	app_init_debug();
 
-	/* init console */
-	// shell_recv_all_data_onetime = 1;
-	// shell_init_rom(0, 0);	
-	// shell_init_ram();
-	// ipc_table_init();
 	micropython_task_init();
-
-	/* Register Log Uart Callback function */
-	// InterruptRegister((IRQ_FUN) shell_uart_irq_rom, UART_LOG_IRQ, (u32)NULL, 5);
-	// InterruptEn(UART_LOG_IRQ,5);
 
 	if(TRUE == SOCPS_DsleepWakeStatusGet()) {
 		app_dslp_wake();
@@ -172,30 +162,12 @@ int main(void)
 
 #if defined(CONFIG_WIFI_NORMAL) && defined(CONFIG_NETWORK)
 	rtw_efuse_boot_write();
-
-	/* pre-processor of application example */
-	// pre_example_entry();
-
-	wlan_network();
-	
-	/* Execute application example */
-	// example_entry();
 #endif
 
-#if defined(CONFIG_EQC) && CONFIG_EQC
-	//EQC_test_entry();
-#endif
 	app_start_autoicg();
 	//app_shared_btmem(ENABLE);
 
 	app_pmu_init();
-
-	if ((BKUP_Read(0) & BIT_KEY_ENABLE))
-		app_keyscan_init(FALSE); /* 5uA */
-	if ((BKUP_Read(0) & BIT_CAPTOUCH_ENABLE))
-		app_captouch_init(); /* 1uA */
-	//if ((BKUP_Read(0) & BIT_GPIO_ENABLE))
-	//	app_hp_jack_init(); 
 	
 	app_init_debug();
 

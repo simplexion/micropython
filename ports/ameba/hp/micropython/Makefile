@@ -69,12 +69,15 @@ SRC_C = \
 	shared/runtime/gchelper_generic.c \
 	shared/runtime/pyexec.c \
 	shared/runtime/stdout_helpers.c \
+	shared/netutils/netutils.c \
 
 SRC_UPY_C = \
 	mp_helper/gccollect.c \
 	mp_helper/mods/modmachine.c \
 	mp_helper/mods/machine/objpin.c \
 	mp_helper/mods/machine/objrtc.c \
+	mp_helper/mods/moduwireless.c \
+	mp_helper/mods/wireless/objwlan.c \
 	$(BOARD_DIR)/pins.c \
 
 SRC_C += $(SRC_UPY_C)

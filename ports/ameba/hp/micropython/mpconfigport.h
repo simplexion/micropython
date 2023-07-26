@@ -12,6 +12,7 @@
 #define MICROPY_MODULE_FROZEN_MPY               (1)
 #define MICROPY_QSTR_EXTRA_POOL                 (mp_qstr_frozen_const_pool)
 
+#define MICROPY_ENABLE_SCHEDULER                (1)
 #define MICROPY_KBD_EXCEPTION                   (1)
 #define MICROPY_NLR_SETJMP                      (1)
 
@@ -25,9 +26,12 @@
 #define MICROPY_PY_STRUCT                       (0)
 #define MICROPY_PY_TIME                         (1)
 #define MICROPY_PY_MACHINE                      (1)
+#define MICROPY_PY_LWIP                         (1)
+
+#define MICROPY_BEGIN_ATOMIC_SECTION()          ({vPortEnterCritical(); 1;})
+#define MICROPY_END_ATOMIC_SECTION(state)       vPortExitCritical()
 
 // Type definitions for the specific machine.
-
 typedef intptr_t mp_int_t; // must be pointer size
 typedef uintptr_t mp_uint_t; // must be pointer size
 typedef long mp_off_t;
