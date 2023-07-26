@@ -11,6 +11,9 @@
 #define MICROPY_MODULE_FROZEN_MPY               (1)
 #define MICROPY_QSTR_EXTRA_POOL                 (mp_qstr_frozen_const_pool)
 
+#define MICROPY_KBD_EXCEPTION                   (1)
+#define MICROPY_NLR_SETJMP                      (1)
+
 // Fine control over Python builtins, classes, modules, etc.
 #define MICROPY_PY_ASYNC_AWAIT                  (0)
 #define MICROPY_PY_BUILTINS_SET                 (0)
@@ -19,9 +22,7 @@
 #define MICROPY_PY_MATH                         (0)
 #define MICROPY_PY_IO                           (0)
 #define MICROPY_PY_STRUCT                       (0)
-
-#define MICROPY_KBD_EXCEPTION                   (1)
-#define MICROPY_NLR_SETJMP                      (1)
+#define MICROPY_PY_TIME                         (1)
 
 // Type definitions for the specific machine.
 

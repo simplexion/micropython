@@ -1,3 +1,38 @@
+/*
+ * This file is part of the Micro Python project, http://micropython.org/
+ *
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2016 Chester Tseng
+ * Copyright (c) 2023 Simplexion GmbH
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+/*****************************************************************************
+ *                              Header includes
+ * ***************************************************************************/
+
+#include "mphalport.h"
+
+#include "micropython_task.h"
+
 #include <unistd.h>
 #include "py/mpstate.h"
 #include "py/mpconfig.h"
@@ -7,8 +42,12 @@
 #include "py/stream.h"
 #include "shared/runtime/interrupt_char.h"
 
-#include "ameba_soc.h"
 #include "serial_api.h"
+#include "osdep_service.h"
+
+#include "FreeRTOS.h"
+#include "task.h"
+#include "cmsis_os.h"
 
 #define USE_RINGBUF 1
 
@@ -119,4 +158,39 @@ uintptr_t mp_hal_stdio_poll(uintptr_t poll_flags) {
     poll_flags = poll_flags;
     return MP_STREAM_POLL_RD;
 #endif
+}
+
+
+///////////////////////////////
+//       Delay & Time        //
+///////////////////////////////
+void mp_hal_delay_ms(uint32_t ms) {
+    const TickType_t xDelay = ms / portTICK_PERIOD_MS;
+    vTaskDelay( xDelay );
+    // osDelay(ms); //RTOS delay
+}
+
+void mp_hal_delay_us(uint32_t us) {
+    DelayUs(us); // asm NOP
+}
+
+uint64_t mp_hal_ticks_cpu(void) {
+    return SYSTIMER_TickGet(); // resolution is 31us
+}
+
+uint64_t mp_hal_ticks_us(void) {
+    return SYSTIMER_TickGet() * 31ULL;
+}
+
+uint32_t mp_hal_ticks_ms(void) {
+    return rtw_get_current_time();
+}
+
+// Wake up the main task if it is sleeping
+void mp_hal_wake_main_task_from_isr(void) {
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    vTaskNotifyGiveFromISR(mp_main_task_handle, &xHigherPriorityTaskWoken);
+    if (xHigherPriorityTaskWoken == pdTRUE) {
+        portYIELD_FROM_ISR(pdTRUE);
+    }
 }
