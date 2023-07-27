@@ -12,6 +12,9 @@ endif
 
 include $(BOARD_DIR)/mpconfigboard.mk
 
+# declare before py.mk
+FROZEN_MANIFEST ?= boards/manifest.py
+
 CHIP := AMEBAD
 
 CROSS = 1
@@ -61,7 +64,6 @@ LIBS =
 SRC_C = \
 	micropython_task.c \
 	mphalport.c \
-	$(BUILD)/_frozen_mpy.c \
 	shared/libc/printf.c \
 	shared/libc/string0.c \
 	shared/readline/readline.c \
@@ -94,9 +96,9 @@ OBJ += $(addprefix $(BUILD)/, $(SRC_CXX:.cpp=.o))
 
 all: $(BUILD)/micropython.o
 
-$(BUILD)/_frozen_mpy.c: $(TOP)/tests/frozen/frozentest.mpy $(BUILD)/genhdr/qstrdefs.generated.h
-	$(ECHO) "MISC freezing bytecode"
-	$(Q)$(TOP)/tools/mpy-tool.py -f -q $(BUILD)/genhdr/qstrdefs.preprocessed.h -mlongint-impl=none $< > $@
+# $(BUILD)/_frozen_mpy.c: $(TOP)/tests/frozen/frozentest.mpy $(BUILD)/genhdr/qstrdefs.generated.h
+# 	$(ECHO) "MISC freezing bytecode"
+# 	$(Q)$(TOP)/tools/mpy-tool.py -f -q $(BUILD)/genhdr/qstrdefs.preprocessed.h -mlongint-impl=none $< > $@
 
 # simply link all MicroPython objcts to one relocatable object 
 $(BUILD)/micropython.o: $(OBJ)

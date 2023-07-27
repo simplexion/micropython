@@ -72,6 +72,14 @@ soft_reset:
     readline_init0();
     modmachine_init();
 
+    // Set up file system
+    // int stat  = interpret_sd_status(SD_Init());
+    // if (stat != 0 ) {
+        pyexec_frozen_module("_boot.py", false);
+    // } else {
+    //     pyexec_frozen_module("_boot_sd.py", false);
+    // }
+
     for ( ; ; ) {
         if (pyexec_mode_kind == PYEXEC_MODE_RAW_REPL) {
             if (pyexec_raw_repl() != 0)
@@ -82,10 +90,6 @@ soft_reset:
         }
         //osThreadYield();
     }
-
-    // // Start a normal REPL; will exit when ctrl-D is entered on a blank line.
-    // pyexec_friendly_repl();
-
 
 soft_reset_exit:
 
