@@ -178,6 +178,10 @@ uint64_t mp_hal_ticks_cpu(void) {
     return SYSTIMER_TickGet(); // resolution is 31us
 }
 
+uint64_t mp_hal_time_ns(void) {
+    return SYSTIMER_TickGet() * 31000ULL;
+}
+
 uint64_t mp_hal_ticks_us(void) {
     return SYSTIMER_TickGet() * 31ULL;
 }
