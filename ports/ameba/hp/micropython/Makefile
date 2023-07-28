@@ -29,7 +29,9 @@ MICROPY_ROM_TEXT_COMPRESSION ?= 1
 include $(TOP)/py/py.mk
 include $(TOP)/extmod/extmod.mk
 
-GIT_SUBMODULES += lib/ambd_sdk
+GIT_SUBMODULES += \
+	lib/ambd_sdk \
+	lib/micropython-lib \
 
 CROSS_COMPILE ?= arm-none-eabi-
 
@@ -78,12 +80,14 @@ SRC_C = \
 SRC_UPY_C = \
 	mp_helper/gccollect.c \
 	mp_helper/diskio.c \
+	mp_helper/help.c \
 	mp_helper/mods/modmachine.c \
 	mp_helper/mods/machine/objflash.c \
 	mp_helper/mods/machine/objpin.c \
 	mp_helper/mods/machine/objrtc.c \
 	mp_helper/mods/machine/objsdcard.c \
 	mp_helper/mods/moduwireless.c \
+	mp_helper/mods/modussl.c \
 	mp_helper/mods/wireless/objwlan.c \
 	$(BOARD_DIR)/pins.c \
 
