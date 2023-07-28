@@ -37,6 +37,7 @@ INC += $(IFLAGS)
 INC += -I$(TOP)
 INC += -I$(BUILD)
 INC += -I$(BOARD_DIR)
+INC += -I$(BASEDIR)/component/common/drivers/sdio/realtek/sdio_host/inc/
 INC += -Imp_helper
 INC += -Imp_helper/mods
 INC += -Imp_helper/mods/network
@@ -78,9 +79,10 @@ SRC_UPY_C = \
 	mp_helper/gccollect.c \
 	mp_helper/diskio.c \
 	mp_helper/mods/modmachine.c \
+	mp_helper/mods/machine/objflash.c \
 	mp_helper/mods/machine/objpin.c \
 	mp_helper/mods/machine/objrtc.c \
-	mp_helper/mods/machine/objflash.c \
+	mp_helper/mods/machine/objsdcard.c \
 	mp_helper/mods/moduwireless.c \
 	mp_helper/mods/wireless/objwlan.c \
 	$(BOARD_DIR)/pins.c \

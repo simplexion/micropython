@@ -49,6 +49,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "cmsis_os.h"
+#include "objsdcard.h"
 
 TaskHandle_t mp_main_task_handle;
 
@@ -73,12 +74,12 @@ soft_reset:
     modmachine_init();
 
     // Set up file system
-    // int stat  = interpret_sd_status(SD_Init());
-    // if (stat != 0 ) {
+    int stat  = interpret_sd_status(SD_Init());
+    if (stat != 0 ) {
         pyexec_frozen_module("_boot.py", false);
-    // } else {
-    //     pyexec_frozen_module("_boot_sd.py", false);
-    // }
+    } else {
+        pyexec_frozen_module("_boot_sd.py", false);
+    }
 
     for ( ; ; ) {
         if (pyexec_mode_kind == PYEXEC_MODE_RAW_REPL) {
