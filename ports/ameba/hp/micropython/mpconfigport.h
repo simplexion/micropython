@@ -21,6 +21,7 @@
 #define MICROPY_PY_TIME                         (1)
 #define MICROPY_PY_MACHINE                      (1)
 #define MICROPY_PY_LWIP                         (1)
+#define MICROPY_PY_FSTRINGS                     (1)
 #define MICROPY_PY_ASYNC_AWAIT                  (0)
 #define MICROPY_PY_BUILTINS_SET                 (0)
 #define MICROPY_PY_ATTRTUPLE                    (0)
