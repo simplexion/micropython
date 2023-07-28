@@ -41,7 +41,7 @@
 #define MICROPY_REPL_EVENT_DRIVEN               (0)
 #define MICROPY_PY_BUILTINS_EXECFILE            (1)
 #define MICROPY_PY_BUILTINS_TIMEOUTERROR        (1)
-#define MICROPY_PY_BUILTINS_INPUT               (0)
+#define MICROPY_PY_BUILTINS_INPUT               (1)
 #define MICROPY_PY_ERRNO                        (1)
 #define MICROPY_PY_SYS                          (1)
 #define MICROPY_PY_SYS_PLATFORM                 "Realtek Ameba"
