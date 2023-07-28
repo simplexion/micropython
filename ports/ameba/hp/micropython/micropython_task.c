@@ -54,7 +54,7 @@
 TaskHandle_t mp_main_task_handle;
 
 // Allocate memory for the MicroPython GC heap.
-static char heap[MP_HEAP_SIZE];
+static char mpHeap[MP_HEAP_SIZE];
 
 void micropython_task(void* arg) {
 
@@ -63,13 +63,14 @@ soft_reset:
     mp_stack_ctrl_init();
 
 #if MICROPY_ENABLE_GC
-    gc_init(heap, heap + sizeof(heap));
+    gc_init(mpHeap, mpHeap + sizeof(mpHeap));
 #endif
 
-    // Initialize MP runtime.
+    // Init MP runtime
     mp_init();
+    mp_obj_list_append(mp_sys_path, MP_OBJ_NEW_QSTR(MP_QSTR__slash_lib));
 
-    // Initialize sub-systems.
+    // Initialise sub-systems.
     readline_init0();
     modmachine_init();
 
@@ -79,6 +80,18 @@ soft_reset:
         pyexec_frozen_module("_boot.py", false);
     } else {
         pyexec_frozen_module("_boot_sd.py", false);
+    }
+
+    // Execute user scripts.
+    int ret = pyexec_file_if_exists("boot.py");
+    if (ret & PYEXEC_FORCED_EXIT) {
+        goto soft_reset_exit;
+    }
+    if (pyexec_mode_kind == PYEXEC_MODE_FRIENDLY_REPL) {
+        ret = pyexec_file_if_exists("main.py");
+        if (ret & PYEXEC_FORCED_EXIT) {
+            goto soft_reset_exit;
+        }
     }
 
     for ( ; ; ) {
@@ -94,11 +107,11 @@ soft_reset:
 
 soft_reset_exit:
 
-    // Deinitialise the runtime.
     gc_sweep_all();
     mp_hal_stdout_tx_str("MPY: soft reboot\r\n");
     mp_deinit();
     goto soft_reset;
+
 }
 
 void micropython_task_init(void) {
