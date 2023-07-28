@@ -36,7 +36,7 @@
 #include "py/runtime.h"
 #include "py/mphal.h"
 
-// #include "machine/objuart.h"
+#include "machine/objuart.h"
 #include "machine/objpin.h"
 // #include "machine/objtimer.h"
 #include "machine/objrtc.h"
@@ -110,7 +110,7 @@ STATIC const mp_map_elem_t machine_module_globals_table[] = {
     { MP_OBJ_NEW_QSTR(MP_QSTR___name__),      MP_OBJ_NEW_QSTR(MP_QSTR_umachine) },
     { MP_OBJ_NEW_QSTR(MP_QSTR_reboot),        MP_OBJ_FROM_PTR(&machine_reset_obj) },
     { MP_OBJ_NEW_QSTR(MP_QSTR_memInfo),          MP_OBJ_FROM_PTR(&machine_info_obj) },
-    // { MP_OBJ_NEW_QSTR(MP_QSTR_UART),          MP_OBJ_FROM_PTR(&uart_type) },
+    { MP_OBJ_NEW_QSTR(MP_QSTR_UART),          MP_OBJ_FROM_PTR(&uart_type) },
     { MP_OBJ_NEW_QSTR(MP_QSTR_Pin),           MP_OBJ_FROM_PTR(&pin_type) },
     // { MP_OBJ_NEW_QSTR(MP_QSTR_Timer),         MP_OBJ_FROM_PTR(&timer_type) },
     // { MP_OBJ_NEW_QSTR(MP_QSTR_RTC),           MP_OBJ_FROM_PTR(&rtc_type) },

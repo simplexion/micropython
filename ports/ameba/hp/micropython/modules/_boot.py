@@ -5,6 +5,7 @@ import os
 import sys
 from wireless import WLAN
 # from machine import Pin, UART, Timer, RTC, PWM, I2C, SPI, WDT, ADC, FLASH
+from machine import Pin, UART
 from socket import socket
 
 print("[MP]: Imported all builtin libraries")

@@ -86,6 +86,7 @@ SRC_UPY_C = \
 	mp_helper/mods/machine/objpin.c \
 	mp_helper/mods/machine/objrtc.c \
 	mp_helper/mods/machine/objsdcard.c \
+	mp_helper/mods/machine/objuart.c \
 	mp_helper/mods/moduwireless.c \
 	mp_helper/mods/modussl.c \
 	mp_helper/mods/wireless/objwlan.c \
