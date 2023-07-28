@@ -46,6 +46,10 @@ flash:
 term: 
 	python3 -m serial.tools.miniterm --exit-char 24 --raw /dev/ttyUSB0 115200
 
+.PHONY: menuconfig
+menuconfig:
+	@make -C hp AMBD_SDK=$(AMBD_SDK) menuconfig
+
 .PHONY: clean
 clean:
 	@rm -rf $(IMAGE_DIR)
