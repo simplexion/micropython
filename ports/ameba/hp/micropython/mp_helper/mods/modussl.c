@@ -335,7 +335,7 @@ STATIC const mp_stream_p_t ussl_socket_stream_p = {
 STATIC MP_DEFINE_CONST_OBJ_TYPE(
     ussl_socket_type,
     MP_QSTR_ussl,
-    MP_TYPE_FLAG_NONE,
+    MP_TYPE_FLAG_ITER_IS_STREAM,
     print, socket_print,
     protocol, &ussl_socket_stream_p,
     locals_dict, &ussl_socket_locals_dict
