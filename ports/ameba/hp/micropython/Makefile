@@ -44,6 +44,7 @@ INC += -Imp_helper
 INC += -Imp_helper/mods
 INC += -Imp_helper/mods/network
 INC += -Imp_helper/mods/machine
+INC += -include mp_helper/mods/bluetooth/app_flags.h
 
 BAD_FLAGS = \
 	-MP \
@@ -90,6 +91,7 @@ SRC_UPY_C = \
 	mp_helper/mods/moduwireless.c \
 	mp_helper/mods/modussl.c \
 	mp_helper/mods/wireless/objwlan.c \
+	mp_helper/mods/bluetooth/objbluetooth.c \
 	$(BOARD_DIR)/pins.c \
 
 SRC_C += $(SRC_UPY_C)

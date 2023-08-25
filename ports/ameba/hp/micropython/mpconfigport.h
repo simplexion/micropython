@@ -95,6 +95,7 @@
 #define MICROPY_PY_RE                           (1)
 #define MICROPY_PY_RE_MATCH_GROUPS              (1)
 #define MICROPY_PY_RE_MATCH_SPAN_START_END      (1)
+#define MICROPY_PY_BLUETOOTH                    (1)
 
 /// File System
 #define MICROPY_ALLOC_PATH_MAX                  (128)
