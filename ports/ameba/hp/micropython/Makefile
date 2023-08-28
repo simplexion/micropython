@@ -92,6 +92,7 @@ SRC_UPY_C = \
 	mp_helper/mods/modussl.c \
 	mp_helper/mods/wireless/objwlan.c \
 	mp_helper/mods/bluetooth/objbluetooth.c \
+	mp_helper/mods/bluetooth/ble_task.c \
 	$(BOARD_DIR)/pins.c \
 
 SRC_C += $(SRC_UPY_C)
