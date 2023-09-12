@@ -191,9 +191,10 @@ void mp_bluetooth_deinit(void) {
 }
 
 bool mp_bluetooth_is_active(void) {
-    T_GAP_DEV_STATE state;
-    le_get_gap_param(GAP_PARAM_DEV_STATE, &state);
-    return (state.gap_init_state == GAP_INIT_STATE_STACK_READY);
+    // T_GAP_DEV_STATE state;
+    // le_get_gap_param(GAP_PARAM_DEV_STATE, &state);
+    // return (state.gap_init_state == GAP_INIT_STATE_STACK_READY);
+    return mp_bluetooth_ameba_ble_state == MP_BLUETOOTH_AMEBA_BLE_STATE_ACTIVE;
 }
 
 void mp_bluetooth_get_current_address(uint8_t *addr_type, uint8_t *addr) {
@@ -257,9 +258,9 @@ int mp_bluetooth_gap_advertise_start(bool connectable, int32_t interval_us, cons
     uint8_t auth_sec_req_enable = false;
     uint16_t auth_sec_req_flags = GAP_AUTHEN_BIT_BONDING_FLAG;
 
-    // if (!mp_bluetooth_is_active()) {
-    //     return MP_ENODEV;
-    // }
+    if (!mp_bluetooth_is_active()) {
+        return MP_ENODEV;
+    }
 
     /* Set device name and device appearance */
     // le_set_gap_param(GAP_PARAM_DEVICE_NAME, GAP_DEVICE_NAME_LEN, device_name);
@@ -301,6 +302,14 @@ int mp_bluetooth_gap_advertise_start(bool connectable, int32_t interval_us, cons
 
     le_adv_start();
 
+    ble_task_init();
+    T_GAP_DEV_STATE state;
+    le_get_gap_param(GAP_PARAM_DEV_STATE, &state);
+    while (state.gap_init_state != GAP_INIT_STATE_STACK_READY) {
+        os_delay(100);
+        le_get_gap_param(GAP_PARAM_DEV_STATE, &state);
+    }
+
     return 0;
 }
 
@@ -310,9 +319,9 @@ void mp_bluetooth_gap_advertise_stop(void) {
 }
 
 int mp_bluetooth_gatts_register_service_begin(bool append) {
-    // if (!mp_bluetooth_is_active()) {
-    //     return MP_ENODEV;
-    // }
+    if (!mp_bluetooth_is_active()) {
+        return MP_ENODEV;
+    }
 
     if (append) {
         return MP_EOPNOTSUPP;
@@ -543,19 +552,18 @@ static T_APP_RESULT ble_profile_callback(T_SERVER_ID service_id, void *p_data) {
 }
 
 
-const T_FUN_GATT_SERVICE_CBS service_cbs = {
-    service_attr_read_cb, // Read callback function pointer
-    service_attr_write_cb, // Write callback function pointer
-    service_attr_cccd_update_cb // CCCD update callback function pointer
-};
+// const T_FUN_GATT_SERVICE_CBS service_cbs = {
+//     service_attr_read_cb, // Read callback function pointer
+//     service_attr_write_cb, // Write callback function pointer
+//     service_attr_cccd_update_cb // CCCD update callback function pointer
+// };
 
 int mp_bluetooth_gatts_register_service_end(void) {
-    // static const T_FUN_GATT_SERVICE_CBS service_cbs = {
-    //     service_attr_read_cb, // Read callback function pointer
-    //     service_attr_write_cb, // Write callback function pointer
-    //     service_attr_cccd_update_cb // CCCD update callback function pointer
-    // };
-    server_builtin_service_reg(false);
+    static const T_FUN_GATT_SERVICE_CBS service_cbs = {
+        service_attr_read_cb, // Read callback function pointer
+        service_attr_write_cb, // Write callback function pointer
+        service_attr_cccd_update_cb // CCCD update callback function pointer
+    };
     server_init(MP_STATE_PORT(bluetooth_ameba_root_pointers)->n_services);
 
     printf("\r\nn_services: %d\r\n", MP_STATE_PORT(bluetooth_ameba_root_pointers)->n_services);
@@ -577,29 +585,27 @@ int mp_bluetooth_gatts_register_service_end(void) {
 
     server_register_app_cb(ble_profile_callback);
 
-    ble_task_init();
-
     return 0;
 }
 
 int mp_bluetooth_gap_disconnect(uint16_t conn_handle) {
-    // if (!mp_bluetooth_is_active()) {
-    //     return MP_ENODEV;
-    // }
+    if (!mp_bluetooth_is_active()) {
+        return MP_ENODEV;
+    }
     return MP_EOPNOTSUPP;
 }
 
 int mp_bluetooth_gatts_read(uint16_t value_handle, const uint8_t **value, size_t *value_len) {
-    // if (!mp_bluetooth_is_active()) {
-    //     return MP_ENODEV;
-    // }
+    if (!mp_bluetooth_is_active()) {
+        return MP_ENODEV;
+    }
     return mp_bluetooth_gatts_db_read(MP_STATE_PORT(bluetooth_ameba_root_pointers)->gatts_db, value_handle, value, value_len);
 }
 
 int mp_bluetooth_gatts_write(uint16_t value_handle, const uint8_t *value, size_t value_len, bool send_update) {
-    // if (!mp_bluetooth_is_active()) {
-    //     return MP_ENODEV;
-    // }
+    if (!mp_bluetooth_is_active()) {
+        return MP_ENODEV;
+    }
     if (send_update) {
         return MP_EOPNOTSUPP;
     }
@@ -614,9 +620,9 @@ static int server_send(uint8_t conn_id, uint16_t value_handle,
 
     T_SERVER_ID service_id = MP_STATE_PORT(bluetooth_ameba_root_pointers)->services[handle.indices.service_index].id;
 
-    // if (!mp_bluetooth_is_active()) {
-    //     return MP_ENODEV;
-    // }
+    if (!mp_bluetooth_is_active()) {
+        return MP_ENODEV;
+    }
 
     if (!os_sem_take(MP_STATE_PORT(bluetooth_ameba_root_pointers)->semaphore_send, 0xffffffff)) { // wait forever
         return MP_EBUSY;
@@ -665,9 +671,9 @@ int mp_bluetooth_get_preferred_mtu(void) {
 }
 
 int mp_bluetooth_set_preferred_mtu(uint16_t mtu) {
-    // if (!mp_bluetooth_is_active()) {
-    //     return MP_ENODEV;
-    // }
+    if (!mp_bluetooth_is_active()) {
+        return MP_ENODEV;
+    }
     gap_config_max_mtu_size(mtu);
     return 0;
 }
